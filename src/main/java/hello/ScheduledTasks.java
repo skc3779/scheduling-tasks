@@ -42,7 +42,6 @@ public class ScheduledTasks {
     //@Scheduled(cron = "0 10 1 * * * ?")
     @Scheduled(cron = "0/10 * * * * ?")
     public void buildExecute() {
-        //http://blog.cjred.net/267/
         try {
             // 고진 소스복사 및 톰켓 재시작
             releaseGojin();
@@ -52,8 +51,10 @@ public class ScheduledTasks {
             releaseSunjin();
         } catch (IOException e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         } catch (InterruptedException e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

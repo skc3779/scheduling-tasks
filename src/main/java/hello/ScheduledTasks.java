@@ -47,10 +47,10 @@ public class ScheduledTasks {
     @Value("${sunjin.tomcat.path}")
     String sunjinTomcatPath;
 
-
     //@Scheduled(fixedRate = 5000)
-    @Scheduled(cron = "0 10 1 * * * ?")
-    //@Scheduled(cron = "0/10 * * * * ?")
+    //@Scheduled(cron = "0/50 * * * * ?")
+    //@Scheduled(cron = "0 30 0 * * ?")
+    @Scheduled(cron = "${scheduled}")
     public void buildExecute() {
         try {
             // 고진 소스복사 및 톰켓 재시작

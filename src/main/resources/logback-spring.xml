@@ -7,10 +7,10 @@
     </encoder>
 </appender>
 <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>D:/BATCH/LOG/task.log</file>
+    <file>./LOGS/task.log</file>
     <prudent>true</prudent>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <fileNamePattern>D:/BATCH/LOG/task.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <fileNamePattern>./LOGS/task.%d{yyyy-MM-dd}.log</fileNamePattern>
         <maxHistory>30</maxHistory>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">

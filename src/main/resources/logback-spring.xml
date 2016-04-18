@@ -6,12 +6,11 @@
         <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
     </encoder>
 </appender>
-<appender name="dailyRollingFileAppender"
-          class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>/Users/seokangchun/githubFriends/scheduling-tasks/logs/task.log</file>
+<appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>D:/BATCH/LOG/task.log</file>
     <prudent>true</prudent>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <fileNamePattern>/Users/seokangchun/githubFriends/scheduling-tasks/logs/task.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <fileNamePattern>D:/BATCH/LOG/task.%d{yyyy-MM-dd}.log</fileNamePattern>
         <maxHistory>30</maxHistory>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">

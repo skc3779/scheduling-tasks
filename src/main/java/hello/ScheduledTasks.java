@@ -26,21 +26,31 @@ public class ScheduledTasks {
     @Value("${source.path}")
     String sourcePath;
 
-    @Value("${gojin.path}")
-    String gojinPath;
+    @Value("${gojin.target.path}")
+    String gojinTargetPath;
 
-    @Value("${sunin.path}")
-    String suninPath;
+    @Value("${sunin.target.path}")
+    String suninTargetPath;
 
-    @Value("${sunjin.path}")
-    String sunjinPath;
+    @Value("${sunjin.target.path}")
+    String sunjinTargetPath;
 
     @Value("${ignore.files}")
     String ignoreFiles;
 
+    @Value("${gojin.tomcat.path}")
+    String gojinTomcatPath;
+
+    @Value("${sunin.tomcat.path}")
+    String suninTomcatPath;
+
+    @Value("${sunjin.tomcat.path}")
+    String sunjinTomcatPath;
+
+
     //@Scheduled(fixedRate = 5000)
-    //@Scheduled(cron = "0 10 1 * * * ?")
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0 10 1 * * * ?")
+    //@Scheduled(cron = "0/10 * * * * ?")
     public void buildExecute() {
         try {
             // 고진 소스복사 및 톰켓 재시작
@@ -63,12 +73,12 @@ public class ScheduledTasks {
      *  고진소스 복사
      */
     private void releaseGojin() throws IOException, InterruptedException {
-        //Runtime.getRuntime().exec("cmd /c start d:\\stop.bat");
+        Runtime.getRuntime().exec("cmd /c start "+gojinTomcatPath+"shutdown.bat");
         Thread.sleep(TIMESLEEP);
         log.info("고진톰켓 정지 완료! ");
-        copyFolder(new File(sourcePath), new File(gojinPath));
+        copyFolder(new File(sourcePath), new File(gojinTargetPath));
         log.info("고진톰켓 소스복사 완료! ");
-        //Runtime.getRuntime().exec("cmd /c start d:\\start.bat");
+        Runtime.getRuntime().exec("cmd /c start "+gojinTomcatPath+"startup.bat");
         Thread.sleep(TIMESLEEP);
         log.info("고진톰켓 시작 완료! ");
     }
@@ -76,17 +86,29 @@ public class ScheduledTasks {
     /**
      *  선인소스 복사
      */
-    private void releaseSunin() throws IOException {
-        copyFolder(new File(sourcePath), new File(suninPath));
+    private void releaseSunin() throws IOException, InterruptedException {
+        Runtime.getRuntime().exec("cmd /c start "+suninTomcatPath+"shutdown.bat");
+        Thread.sleep(TIMESLEEP);
+        log.info("선인톰켓 정지 완료! ");
+        copyFolder(new File(sourcePath), new File(suninTargetPath));
         log.info("선인톰켓 복사 완료! ");
+        Runtime.getRuntime().exec("cmd /c start "+suninTomcatPath+"startup.bat");
+        Thread.sleep(TIMESLEEP);
+        log.info("선인톰켓 시작 완료! ");
     }
 
     /**
      *  선진소스 복사
      */
-    private void releaseSunjin() throws IOException {
-        copyFolder(new File(sourcePath), new File(sunjinPath));
-        log.info("선톰진켓 복사 완료! ");
+    private void releaseSunjin() throws IOException, InterruptedException {
+        Runtime.getRuntime().exec("cmd /c start "+sunjinTomcatPath+"shutdown.bat");
+        Thread.sleep(TIMESLEEP);
+        log.info("선진톰켓 정지 완료! ");
+        copyFolder(new File(sourcePath), new File(sunjinTargetPath));
+        log.info("선진톰켓 복사 완료! ");
+        Runtime.getRuntime().exec("cmd /c start "+sunjinTomcatPath+"startup.bat");
+        Thread.sleep(TIMESLEEP);
+        log.info("선진톰켓 시작 완료! ");
     }
 
     /**
@@ -103,6 +125,7 @@ public class ScheduledTasks {
                 return !aList.contains(name);
             }
         };
+
         // 파일 카피
         FileUtils.copyDirectory(src, dest, fileFilter);
     }

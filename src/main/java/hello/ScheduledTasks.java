@@ -3,6 +3,7 @@ package hello;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -69,10 +70,14 @@ public class ScheduledTasks {
     }
 
 
+    protected void releaseTest() throws IOException, InterruptedIOException {
+        log.info("테스트 스케쥴 실행! ");
+    }
+
     /**
      *  고진소스 복사
      */
-    private void releaseGojin() throws IOException, InterruptedException {
+    protected void releaseGojin() throws IOException, InterruptedException {
         Runtime.getRuntime().exec("cmd /c start "+gojinTomcatPath+"shutdown.bat");
         Thread.sleep(TIMESLEEP);
         log.info("고진톰켓 정지 완료! ");
@@ -81,12 +86,13 @@ public class ScheduledTasks {
         Runtime.getRuntime().exec("cmd /c start "+gojinTomcatPath+"startup.bat");
         Thread.sleep(TIMESLEEP);
         log.info("고진톰켓 시작 완료! ");
+
     }
 
     /**
      *  선인소스 복사
      */
-    private void releaseSunin() throws IOException, InterruptedException {
+    protected void releaseSunin() throws IOException, InterruptedException {
         Runtime.getRuntime().exec("cmd /c start "+suninTomcatPath+"shutdown.bat");
         Thread.sleep(TIMESLEEP);
         log.info("선인톰켓 정지 완료! ");
@@ -100,7 +106,7 @@ public class ScheduledTasks {
     /**
      *  선진소스 복사
      */
-    private void releaseSunjin() throws IOException, InterruptedException {
+    protected void releaseSunjin() throws IOException, InterruptedException {
         Runtime.getRuntime().exec("cmd /c start "+sunjinTomcatPath+"shutdown.bat");
         Thread.sleep(TIMESLEEP);
         log.info("선진톰켓 정지 완료! ");

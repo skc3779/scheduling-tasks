@@ -48,6 +48,21 @@ public class ScheduledTasks {
     @Value("${sunjin.tomcat.path}")
     String sunjinTomcatPath;
 
+    @Value("${m.source.path}")
+    String msourcePath;
+
+    @Value("${m.gojin.target.path}")
+    String mgojinTargetPath;
+
+    @Value("${m.sunin.target.path}")
+    String msuninTargetPath;
+
+    @Value("${m.sunjin.target.path}")
+    String msunjinTargetPath;
+
+    @Value("${ignore.files}")
+    String mignoreFiles;
+
     //@Scheduled(fixedRate = 5000)
     //@Scheduled(cron = "0/50 * * * * ?")
     //@Scheduled(cron = "0 30 0 * * ?")
@@ -60,6 +75,13 @@ public class ScheduledTasks {
             releaseSunin();
             // 선인 소스복사 및 톰켓 재시작
             releaseSunjin();
+
+            // 고진 모바일 소스복사
+            releaseMGojin();
+            // 선인 모바일 소스복사
+            releaseMSunin();
+            // 선진 모바일 소스복사
+            releaseMSunjin();
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -68,7 +90,6 @@ public class ScheduledTasks {
             log.error(e.getMessage());
         }
     }
-
 
     protected void releaseTest() throws IOException, InterruptedIOException {
         log.info("테스트 스케쥴 실행! ");
@@ -81,12 +102,21 @@ public class ScheduledTasks {
         Runtime.getRuntime().exec("cmd /c start "+gojinTomcatPath+"shutdown.bat");
         Thread.sleep(TIMESLEEP);
         log.info("고진톰켓 정지 완료! ");
-        copyFolder(new File(sourcePath), new File(gojinTargetPath));
+        copyFolder(new File(sourcePath), new File(gojinTargetPath), ignoreFiles);
         log.info("고진톰켓 소스복사 완료! ");
         Runtime.getRuntime().exec("cmd /c start "+gojinTomcatPath+"startup.bat");
         Thread.sleep(TIMESLEEP);
         log.info("고진톰켓 시작 완료! ");
 
+    }
+
+    /**
+     *  모바일 고진소스 복사
+     */
+    protected void releaseMGojin() throws IOException, InterruptedException {
+
+        copyFolder(new File(msourcePath), new File(mgojinTargetPath), mignoreFiles);
+        log.info("고진모바일 소스복사 완료! ");
     }
 
     /**
@@ -96,11 +126,20 @@ public class ScheduledTasks {
         Runtime.getRuntime().exec("cmd /c start "+suninTomcatPath+"shutdown.bat");
         Thread.sleep(TIMESLEEP);
         log.info("선인톰켓 정지 완료! ");
-        copyFolder(new File(sourcePath), new File(suninTargetPath));
+        copyFolder(new File(sourcePath), new File(suninTargetPath), ignoreFiles);
         log.info("선인톰켓 복사 완료! ");
         Runtime.getRuntime().exec("cmd /c start "+suninTomcatPath+"startup.bat");
         Thread.sleep(TIMESLEEP);
         log.info("선인톰켓 시작 완료! ");
+    }
+
+    /**
+     *  모바일 선인소스 복사
+     */
+    protected void releaseMSunin() throws IOException, InterruptedException {
+
+        copyFolder(new File(msourcePath), new File(msuninTargetPath), mignoreFiles);
+        log.info("선인모바일 소스복사 완료! ");
     }
 
     /**
@@ -110,7 +149,7 @@ public class ScheduledTasks {
         Runtime.getRuntime().exec("cmd /c start "+sunjinTomcatPath+"shutdown.bat");
         Thread.sleep(TIMESLEEP);
         log.info("선진톰켓 정지 완료! ");
-        copyFolder(new File(sourcePath), new File(sunjinTargetPath));
+        copyFolder(new File(sourcePath), new File(sunjinTargetPath), ignoreFiles);
         log.info("선진톰켓 복사 완료! ");
         Runtime.getRuntime().exec("cmd /c start "+sunjinTomcatPath+"startup.bat");
         Thread.sleep(TIMESLEEP);
@@ -118,15 +157,24 @@ public class ScheduledTasks {
     }
 
     /**
+     *  모바일 선진소스 복사
+     */
+    protected void releaseMSunjin() throws IOException, InterruptedException {
+
+        copyFolder(new File(msourcePath), new File(msunjinTargetPath), mignoreFiles);
+        log.info("선진모바일 소스복사 완료! ");
+    }
+
+    /**
      *  소파스일복사
      */
-    private void copyFolder(File src, File dest) throws IOException {
+    private void copyFolder(File src, File dest, String ignore) throws IOException {
         // 파일 필터 객체
         FileFilter fileFilter = new FileFilter() {
             @Override
             public boolean accept(File pathname) {
                 String name = pathname.getName();
-                List aList = Arrays.asList(ignoreFiles.split(","));
+                List aList = Arrays.asList(ignore.split(","));
                 //log.info("filename : {}, {}", name, !aList.contains(name));
                 return !aList.contains(name);
             }
@@ -135,4 +183,5 @@ public class ScheduledTasks {
         // 파일 카피
         FileUtils.copyDirectory(src, dest, fileFilter);
     }
+
 }

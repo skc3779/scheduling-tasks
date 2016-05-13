@@ -31,6 +31,16 @@ public class Application implements CommandLineRunner {
     @Value("${test.enabled}")
     String testEnabled;
 
+    @Value("${m.gojin.enabled}")
+    String mgojinEnabled;
+
+    @Value("${m.sunin.enabled}")
+    String msuninEnabled;
+
+    @Value("${m.sunjin.enabled}")
+    String msunjinEnabled;
+
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -39,18 +49,33 @@ public class Application implements CommandLineRunner {
         }
 
         if(gojinEnabled.toUpperCase().equals("Y")) {
-            log.info("시작시 고진 실행");
+            log.info("시작시 고진 톰켓 실행");
             scheduledTasks.releaseGojin();
         }
 
         if(suninEnabled.toUpperCase().equals("Y")) {
-            log.info("시작시 선인 실행");
+            log.info("시작시 선인 톰켓 실행");
             scheduledTasks.releaseSunin();
         }
 
         if(sunjinEnabled.toUpperCase().equals("Y")) {
-            log.info("시작시 선진 실행");
+            log.info("시작시 선진 톰켓 실행");
             scheduledTasks.releaseSunjin();
+        }
+
+        if(mgojinEnabled.toUpperCase().equals("Y")) {
+            log.info("시작시 고진 모바일 실행");
+            scheduledTasks.releaseMGojin();
+        }
+
+        if(msuninEnabled.toUpperCase().equals("Y")) {
+            log.info("시작시 선인 모바일 실행");
+            scheduledTasks.releaseMSunin();
+        }
+
+        if(msunjinEnabled.toUpperCase().equals("Y")) {
+            log.info("시작시 선진 모바일 실행");
+            scheduledTasks.releaseMSunjin();
         }
 
     }
